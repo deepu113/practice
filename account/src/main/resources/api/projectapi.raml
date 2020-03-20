@@ -1,0 +1,82 @@
+#%RAML 1.0
+title: Projectapi
+types:
+  Projectapi: !include Datatypes/Projectapi.raml
+  ProjectRespnse: !include Datatypes/ProjectapiResponse.raml
+ 
+
+
+/createAccount:
+  post:
+    responses:
+      201:
+        body:
+          application/json:
+            type: Projectapi
+            example: !include Examples/ProjectapiExample.raml
+
+/selectAccount:
+  get:
+    queryParameters:
+      ID : number
+    responses:
+      200:
+        body:
+          application/json:
+            type: Projectapi
+            example: !include Examples/ProjectapiExample.raml
+
+/updateAccount:
+  patch:
+    queryParameters:
+      ID : number
+    responses:
+      203:
+        body:
+          application/json:
+            type: ProjectRespnse
+            example: !include Examples/ProjectapiResponseExample.raml
+
+
+/deleteAccount:
+  delete:
+    queryParameters:
+      ID : number
+    responses:
+      200:
+        body:
+          application/json:
+            type: ProjectRespnse
+            example: !include Examples/deleteexample.raml
+                
+                  
+              
+          
+        
+
+    
+    
+  
+  
+   
+   
+    
+            
+              
+              
+                    
+              
+           
+              
+            
+
+
+
+
+
+
+
+      
+
+                    
+          

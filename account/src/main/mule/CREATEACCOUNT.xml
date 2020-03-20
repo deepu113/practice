@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="4dcfb091-fadb-4b33-ac5a-dfed120dab08" >
+		<db:my-sql-connection host="localhost" port="3308" user="root" password="root" database="examples" />
+	</db:config>
+	<flow name="CREATEACCOUNTFlow" doc:id="797a9bd2-899d-4ad3-9c33-349fcb48cf7a" >
+		<logger level="INFO" doc:name="Logger" doc:id="98afdbe6-e162-4c56-8df2-086b7e0f0b5f" message="before......................................"/>
+		<db:insert doc:name="Insert" doc:id="4fd424ae-6ee4-43ac-9fc3-0536dd02dd84" config-ref="Database_Config">
+			<db:sql >insert into account(ID, NAME, AccNum, BALANCE, EMAIL)  values(:ID, :NAME, :AccNum, :BALANCE, :EMAIL)</db:sql>
+			<db:input-parameters ><![CDATA[#[{
+        'ID': payload.'ID',
+         'NAME': payload.'NAME',
+          'AccNum':payload.'AccNum',
+          'BALANCE': payload.'BALANCE',
+          'EMAIL':  payload.'EMAIL'
+}]]]></db:input-parameters>
+		</db:insert>
+		<logger level="INFO" doc:name="Logger" doc:id="97363909-f281-43eb-8e0d-f6ccac0eb8e0" message="after ...........................  #[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="7145c314-76ae-4d7d-8e38-865415a57b4f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+
+	{
+		"status":"Account created successful"
+	}
+
+	
+
+
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="SELECTACCOUNTFlow" doc:id="1cd663b8-d5a7-4537-a50e-ef97b23cd807" >
+		<http:listener doc:name="Listener" doc:id="a38e646e-bb36-4bff-9e2e-7048262c6d69" config-ref="projectapi-httpListenerConfig" path="/api"/>
+		<logger level="INFO" doc:name="Logger" doc:id="448a77be-bc31-43da-93e4-e177c0d9c328" />
+		<db:select doc:name="Select" doc:id="7cd577b4-4759-4e04-bcc7-c7e16a70d76a" >
+			<db:sql >select * from account where ID=:ID</db:sql>
+			<db:input-parameters ><![CDATA[#[{
+    
+             'ID': attributes.queryParams.'ID'
+
+}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="9438659b-53a1-4ddd-ad5f-c0e588ef83cb" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+"STATUS": payload
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

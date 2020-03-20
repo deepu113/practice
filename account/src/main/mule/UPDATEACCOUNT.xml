@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<db:config name="Database_Config1" doc:name="Database Config" doc:id="7d15ecdc-a495-45ba-b937-52e312abdf3b" >
+		<db:my-sql-connection host="localhost" port="3308" user="root" password="root" database="examples" />
+	</db:config>
+	<flow name="UPDATEACCOUNTFlow" doc:id="33af6097-5f53-4e09-8aef-f91856477843" >
+		<logger level="INFO" doc:name="Logger" doc:id="c5bf1c92-9624-466e-8046-de802600af9e" />
+		<db:update doc:name="Update" doc:id="40f724ee-c132-4cc3-851a-876f54405b29" config-ref="Database_Config1">
+			<db:sql >update account set EMAIL= :EMAIL where ID= :ID</db:sql>
+			<db:input-parameters ><![CDATA[#[{
+
+     'ID': attributes.queryParams.'ID' as Number,
+   'EMAIL':payload.'EMAIL' as String
+
+}]]]></db:input-parameters>
+		</db:update>
+		<ee:transform doc:name="Transform Message" doc:id="b64f4087-b54b-434d-a54b-f7ce20f5c135" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
